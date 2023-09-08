@@ -1,6 +1,6 @@
 # Leap Interpretability Engine
 
-Congratulations on being a _very_ early adopter of our interpretability engine! Not sure what's going on? Check out the [FAQ](#faq) 
+Congratulations on being a _very_ early adopter of our interpretability engine! Not sure what's going on? Check out the [FAQ](#faq).
 
 ## Installation
 
@@ -18,10 +18,13 @@ Using the interpretability engine is really easy! All you need to do is import l
 results = engine.generate(project_name="interpretability", model=your_model, class_list=['hotdog', 'not_hotdog'], config= {"leap_api_key": "YOUR_LEAP_API_KEY", "input_dim":[3, 224, 224]})
 
 ```
-Currently we support image classification models only. We expect the model to take a batch of images as input, and return a batch of logits (NOT probabilities). 
+Currently we support image classification models only. We expect the model to take a batch of images as input, and return a batch of logits (NOT probabilities). For best results, you might have to tune the [config](#config) a bit.
 
 ## Results
-The generate function returns a pandas dataframe. If you're in a jupyter notebook, you can view these inline using engine.display_results(results), but for the best experience we recommend you head to the [leap app](https://app.leap-labs.com/) to view your prototypes and isolations, or [log directly to your weights and biases dashboard](#weights-and-biases-integration).
+
+The generate function returns a pandas dataframe, containing [prototypes](#what-is-a-prototype?), [entanglements](#what-is-entanglement?), and [feature isolations](#what-is-feature-isolation?). If used with samples (see [Sample Feature Isolation](#sample-feature-isolation)), the dataframe contains feature isolations for each sample, for the target classes (if provided), or for the top 3 predicted classes.
+
+If you're in a jupyter notebook, you can view these inline using engine.display_results(results), but for the best experience we recommend you head to the [leap app](https://app.leap-labs.com/) to view your prototypes and isolations, or [log directly to your weights and biases dashboard](#weights-and-biases-integration).
 
 ## Supported Packages
 
@@ -44,7 +47,7 @@ results = engine.generate(project_name="your_wandb_project_name", model=your_mod
 
 ## Prototype Generation
 
-Given your model, we generate prototypes and entanglements for each class you specify. [What is a prototype?](#what-is-a-prototype?) [What is entanglement?](#what-is-entanglement?) We also isolate entangled features in your prototypes. [What is feature isolation?](#what-is-feature-isolation?)
+Given your model, we generate [prototypes](#what-is-a-prototype?) and [entanglements](#what-is-entanglement?) We also [isolate entangled features](#what-is-feature-isolation?) in your prototypes.
 
 ```python
 from leap_ie import engine
@@ -278,6 +281,10 @@ During the prototype generation process we extract a lot of information from the
 
 ## What is feature isolation?
 
+Feature isolation does what it says on the tin - it isolates which features in the input the model is using to make its prediction. 
+
 We can apply feature isolation in two ways: 
-- 1. 0n a prototype that we've generated, to isolate _which_ features are shared between entangled classes; and
+- 1. 0n a prototype that we've generated, to isolate which features are shared between entangled classes, and so help explain how those classes are entangled; and
 - 2. On some input data, to explain individual predictions that your model makes, by isolating the features in the input that correspond to the predicted class (similar to saliency mapping).
+
+So, you can use it to both understand properties of your model as a whole, and to better understand the individual predictions it makes.
