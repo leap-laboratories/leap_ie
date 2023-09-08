@@ -171,17 +171,17 @@ Typically, you'll only change a few of these – though feel free to experiment!
   - *Default*: `True`
 
 - **lr** (`float`): How much to update the prototype at each step during the prototype generation process. This can be tuned, but in practice is to around 1% of the expected input range. E.g. if your model was trained on images in the range -1 to 1 (prior to any preprocessing function), 0.02 is a good place to start.
-  - *Default*: `0.05`
+  - *Default*: `0.005`
 
 - **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
-  - *Default*: `500`
+  - *Default*: `1000`
 
 
 Here are all of the config options currently available:
 
 ```python
 config = {
-            "use_alpha": False,
+            "use_alpha": True,
             "alpha_mask": False,
             "alpha_only": False,
             "baseline_init": 0,
@@ -194,9 +194,9 @@ config = {
             "isolation": True,
             "logit_scale": 1,
             "log_freq": 100,
-            "lr": 0.05,
+            "lr": 0.005,
             "max_isolate_classes": min(3, len(class_list)),
-            "max_steps": 500,
+            "max_steps": 1000,
             "seed": 0,
             "use_baseline": False,
             "transform": "xl",
@@ -206,7 +206,7 @@ config = {
 ```
 
 - **use_alpha** (`bool`): If True, adds an alpha channel to the prototype. This results in the prototype generation process returning semi-transparent prototypes, which allow it to express ambivalence about the values of pixels that don't change the model prediction.
-  - *Default*: `False`
+  - *Default*: `True`
 
 - **alpha_mask** (`bool`): If True, applies a mask during prototype generation which encourages the resulting prototypes to be minimal, centered and concentrated. Experimental.
   - *Default*: `False`
@@ -242,13 +242,13 @@ config = {
   - *Default*: `100`
 
 - **lr** (`float`): How much to update the prototype at each step during the prototype generation process. This can be tuned, but in practice is to around 1% of the expected input range. E.g. if your model was trained on images in the range -1 to 1 (prior to any preprocessing function), 0.02 is a good place to start.
-  - *Default*: `0.05`
+  - *Default*: `0.005`
 
 - **max_isolate_classes** (`int`): How many classes to isolate features for, if isolate_classes is not provided.
   - *Default*: `min(3, len(class_list))`
 
 - **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
-  - *Default*: `500`
+  - *Default*: `1000`
 
 - **seed** (`int`): Random seed for initialisation.
   - *Default*: `0`
