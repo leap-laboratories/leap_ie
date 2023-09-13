@@ -28,7 +28,7 @@ If you're in a jupyter notebook, you can view these inline using engine.display_
 
 ## Supported Packages
 
-We support both pytorch and tensorflow! Specify your package with the `mode` parameter, using `'tf'` for tensorflow and `'pt'` for pytorch. (Defaults to pytorch if unspecified.)
+We support both pytorch and tensorflow! Specify your package with the `mode` parameter, using `'tf'` for tensorflow and `'pt'` for pytorch. (Defaults to pytorch if unspecified.) Tensorflow is still faily experimental and will likely require a fair amount of config tuning - sorry! We're working on it.
 
 If using pytorch, we expect the model to take images to be in channels first format, e.g. of shape `[1, channels, height, width]`. If tensorflow, channels last, e.g.`[1, height, width, channels]`.
 
@@ -181,7 +181,7 @@ Here are all of the config options currently available:
 
 ```python
 config = {
-            "use_alpha": True,
+            "use_alpha": False,
             "alpha_mask": False,
             "alpha_only": False,
             "baseline_init": 0,
@@ -194,7 +194,7 @@ config = {
             "isolation": True,
             "logit_scale": 1,
             "log_freq": 100,
-            "lr": 0.005,
+            "lr": 0.002,
             "max_isolate_classes": min(3, len(class_list)),
             "max_steps": 1000,
             "seed": 0,
@@ -206,7 +206,7 @@ config = {
 ```
 
 - **use_alpha** (`bool`): If True, adds an alpha channel to the prototype. This results in the prototype generation process returning semi-transparent prototypes, which allow it to express ambivalence about the values of pixels that don't change the model prediction.
-  - *Default*: `True`
+  - *Default*: `False`
 
 - **alpha_mask** (`bool`): If True, applies a mask during prototype generation which encourages the resulting prototypes to be minimal, centered and concentrated. Experimental.
   - *Default*: `False`
