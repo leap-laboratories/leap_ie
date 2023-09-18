@@ -26,7 +26,7 @@ The generate function returns a pandas dataframe, containing [prototypes](#what-
 
 If you're in a jupyter notebook, you can view these inline using engine.display_results(results), but for the best experience we recommend you head to the [leap app](https://app.leap-labs.com/) to view your prototypes and isolations, or [log directly to your weights and biases dashboard](#weights-and-biases-integration).
 
-## Supported Packages
+## Supported Frameworks
 
 We support both pytorch and tensorflow! Specify your package with the `mode` parameter, using `'tf'` for tensorflow and `'pt'` for pytorch. (Defaults to pytorch if unspecified.) Tensorflow is still faily experimental and will likely require a fair amount of config tuning - sorry! We're working on it.
 
