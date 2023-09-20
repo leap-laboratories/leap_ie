@@ -15,7 +15,7 @@ Sign in and generate your API key in the [leap app](https://app.leap-labs.com/) 
 ## Usage
 Using the interpretability engine is really easy! All you need to do is import leap_ie, and wrap your model in our generate function:
 ```python
-results = engine.generate(
+df_results, dict_results = engine.generate(
     project_name="interpretability",
     model=your_model,
     class_list=["hotdog", "not_hotdog"],
