@@ -45,7 +45,7 @@ config = {
     "leap_api_key": "YOUR_LEAP_API_KEY",
     "input_dim": [3, 224, 224],
 }
-results = engine.generate(
+df_results, dict_results = engine.generate(
     project_name="your_wandb_project_name",
     model=your_model,
     class_list=["hotdog", "not_hotdog"],
@@ -70,7 +70,7 @@ model = preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
 target_classes = [0, 1, 2]
 
 # generate prototypes
-prototypes = engine.generate(
+df_results, dict_results = engine.generate(
     project_name="resnet18",
     model=model,
     class_list=class_list,
@@ -117,7 +117,7 @@ tt = transforms.ToTensor()
 image = preprocessing_fn[0](tt(Image.open(image_path)).unsqueeze(0))
 
 # to isolate features:
-isolations = engine.generate(
+df_results, dict_results = engine.generate(
     project_name="resnet18",
     model=model,
     class_list=class_list,
