@@ -96,7 +96,7 @@ from leap_ie.vision.models import get_model
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
 
 # Replace this model with your own, or explore any imagenet classifier from torchvision (https://pytorch.org/vision/stable/models.html).
-model = preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
+preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
 
 # indexes of classes to generate prototypes for. In this case, ['tench', 'goldfish', 'great white shark'].
 target_classes = [0, 1, 2]
@@ -132,7 +132,7 @@ from PIL import Image
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
 
 # Replace this model with your own, or explore any imagenet classifier from torchvision (https://pytorch.org/vision/stable/models.html).
-model = preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
+preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
 
 # load an image
 image_path = "tools.jpeg"
