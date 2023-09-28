@@ -58,8 +58,8 @@ df_results, dict_results = engine.generate(
 Given your model, we generate [prototypes](#what-is-a-prototype) and [entanglements](#what-is-entanglement) We also [isolate entangled features](#what-is-feature-isolation) in your prototypes.
 
 ```python
-from leap_ie import engine
-from leap_ie.models import get_model
+from leap_ie.vision import engine
+from leap_ie.vision.models import get_model
 
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
 
@@ -102,8 +102,8 @@ Given some input image, we can show you which features your model thinks belong 
 
 ```python
 from torchvision import transforms
-from leap_ie import engine
-from leap_ie.models import get_model
+from leap_ie.vision import engine
+from leap_ie.vision.models import get_model
 from PIL import Image
 
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
@@ -139,7 +139,7 @@ The generate function is used for both prototype generation directly from the mo
 
 
 ```python
-leap_ie.engine.generate(
+leap_ie.vision.engine.generate(
     project_name,
     model,
     class_list,
