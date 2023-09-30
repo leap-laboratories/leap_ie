@@ -14,8 +14,8 @@ Sign in and generate your API key in the [leap app](https://app.leap-labs.com/) 
 
 ## Get started!
 ```
-from leap_ie import engine
-from leap_ie.models import get_model
+from leap_ie.vision import engine
+from leap_ie.vision.models import get_model
 
 preprocessing_fn, model, class_list = get_model('torchvision.resnet18')
 
@@ -31,7 +31,7 @@ We provide easy access to all [image classification torchvision models](https://
 Using the interpretability engine with your own models is really easy! All you need to do is import leap_ie, and wrap your model in our generate function:
 ```python
 
-from leap_ie import engine
+from leap_ie.vision import engine
 
 df_results, dict_results = engine.generate(
     project_name="interpretability",
