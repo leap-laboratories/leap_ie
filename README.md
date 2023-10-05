@@ -251,7 +251,7 @@ config = {
     log_freq: int = 100
     lr: float = 0.05
     max_isolate_classes: int = 3
-    max_lr: float = 2.0
+    max_lr: float = 1.0
     max_steps: int = 1500
     min_lr: float = 0.0001
     mode: str = "pt"
@@ -310,7 +310,7 @@ config = {
   - *Default*: `min(3, len(class_list))`
 
 - **max_lr** (`float`): Maximum learning rate for learning rate finder.
- - *Default*: `2.0`     
+ - *Default*: `1.0`     
   
 - **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
   - *Default*: `1000`
