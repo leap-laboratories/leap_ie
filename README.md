@@ -288,7 +288,7 @@ config = {
 - **input_dim** (`list`): The dimensions of the input that your model expects.
   - *Default*: `[224, 224, 3]` if mode is "tf" else `[3, 224, 224]`
   
-- **isolate_classes** (`list`): If you'd like to isolate features for specific classes, rather than the top _n_, specify their indices here, e.g. [2,7,8].
+- **isolate_classes** (`list`): If you'd like to isolate features for specific classes, rather than the top _n_, specify their indices here for EACH target, e.g. [[2,7,8], [2,3]].
   - *Default*: `None`
   
 - **isolation** (`bool`): Whether to isolate features for entangled classes. Set to False if you want prototypes only.
