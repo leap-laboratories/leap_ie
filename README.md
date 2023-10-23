@@ -10,9 +10,39 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install leap-ie
 pip install leap-ie
 ```
 
+During installation `leap-ie` does not modify any dependencies related to PyTorch or Tensorflow in order to preserve your development environment. However, `leap-ie` requires that the following version requirements are met:
+
+**PyTorch**
+| Library | Version |
+| ---------- | ------- |
+| torch | >=1.13.0 |
+| torchvision | >=0.14.0 |
+
+**Tensorflow**
+| Library | Version |
+| ---------- | ------- |
+| tensorflow | >=2.12.0 |
+
+If you do not have the required libraries installed, you can quickly install them by specifying them as extras:
+
+**PyTorch**
+
+```bash
+pip install leap-ie[with-torch]
+```
+
+**Tensorflow**
+
+```bash
+pip install leap-ie[with-tensorflow]
+```
+
+### Generating an API Key
+
 Sign in and generate your API key in the [leap app](https://app.leap-labs.com/) - you'll need this to get started.
 
 ## Get started!
+
 ```
 from leap_ie.vision import engine
 from leap_ie.vision.models import get_model
@@ -26,9 +56,10 @@ results_df, results_dict = engine.generate(project_name="leap!", model=model, cl
 
 We provide easy access to all [image classification torchvision models](https://pytorch.org/vision/main/models.html#classification) via `leap_ie.models.get_model(torchvision.[name of model])`. We can also automatically pull image classification models from huggingface - just use the model id: `get_model('nateraw/vit-age-classifier')`
 
-
 ## Usage
+
 Using the interpretability engine with your own models is really easy! All you need to do is import leap_ie, and wrap your model in our generate function:
+
 ```python
 
 from leap_ie.vision import engine
@@ -40,6 +71,7 @@ df_results, dict_results = engine.generate(
     config={"leap_api_key": "YOUR_LEAP_API_KEY"},
 )
 ```
+
 Currently we support image classification models only. We expect the model to take a batch of images as input, and return a batch of logits (NOT probabilities). For most models this will work out of the box, but if your model returns something else (e.g. a dictionary, or probabilities) you might have to edit it, or add a wrapper before passing it to `engine.generate()`.
 
 ```python
@@ -70,7 +102,9 @@ We support both pytorch and tensorflow! Specify your package with the `mode` par
 If using pytorch, we expect the model to take images to be in channels first format, e.g. of shape `[1, channels, height, width]`. If tensorflow, channels last, e.g.`[1, height, width, channels]`.
 
 ## Weights and Biases Integration
+
 We can also log results directly to your WandB projects. To do this, set `project_name` to the name of the WandB project where you'd like the results to be logged, and add your WandB API key and entity name to the `config` dictionary:
+
 ```python
 config = {
     "wandb_api_key": "YOUR_WANDB_API_KEY",
@@ -160,7 +194,6 @@ engine.display_df(df_results)
 
 The generate function is used for both prototype generation directly from the model, and for feature isolation on your input samples.
 
-
 ```python
 leap_ie.vision.engine.generate(
     project_name,
@@ -176,61 +209,71 @@ leap_ie.vision.engine.generate(
 ```
 
 - **project_name** (`str`): Name of your project. Used for logging.
-  - *Required*: Yes
-  - *Default*: None
+
+  - _Required_: Yes
+  - _Default_: None
 
 - **model** (`object`): Model for interpretation. Currently we support image classification models only. We expect the model to take a batch of images as input, and return a batch of logits (NOT probabilities). If using pytorch, we expect the model to take images to be in channels first format, e.g. of shape `[1, channels, height, width]`. If tensorflow, channels last, e.g.`[1, height, width, channels]`.
-  - *Required*: Yes
-  - *Default*: None
+
+  - _Required_: Yes
+  - _Default_: None
 
 - **class_list** (`list`): List of class names corresponding to your model's output classes, e.g. ['hotdog', 'not hotdog', ...].
-  - *Required*: Yes
-  - *Default*: None
+
+  - _Required_: Yes
+  - _Default_: None
 
 - **config** (`dict` or `str`): Configuration dictionary, or path to a json file containing your configuration. At minimum, this must contain `{"leap_api_key": "YOUR_LEAP_API_KEY"}`.
-  - *Required*: Yes
-  - *Default*: None
+
+  - _Required_: Yes
+  - _Default_: None
 
 - **target_classes** (`list`, optional): List of target class indices to generate prototypes or isolations for, e.g. `[0,1]`. If None, prototypes will be generated for the class at output index 0 only, e.g. 'hotdog', and feature isolations will be generated for the top 3 predicted classes.
-  - *Required*: No
-  - *Default*: None
+
+  - _Required_: No
+  - _Default_: None
 
 - **preprocessing** (`function`, optional): Preprocessing function to be used for generation. This can be None, but for best results, use the preprocessing function used on inputs for inference.
-  - *Required*: No
-  - *Default*: None
+
+  - _Required_: No
+  - _Default_: None
 
 - **samples** (`array`, optional): None, or a batch of images to perform feature isolation on. If provided, only feature isolation is performed (not prototype generation). We expect samples to be of shape `[num_images, height, width, channels]` if using tensorflow, or `[1, channels, height, width]` if using pytorch.
-  - *Required*: No
-  - *Default*: None
+
+  - _Required_: No
+  - _Default_: None
 
 - **device** (`str`, optional): Device to be used for generation. If None, we will try to find a device.
-  - *Required*: No
-  - *Default*: None
+
+  - _Required_: No
+  - _Default_: None
 
 - **mode** (`str`, optional): Framework to use, either 'pt' for pytorch or 'tf' for tensorflow. Default is 'pt'.
-  - *Required*: No
-  - *Default*: `pt`
-
+  - _Required_: No
+  - _Default_: `pt`
 
 ## Config
 
 Leap provides a number of configuration options to fine-tune the interpretability engine's performance with your models. You can provide it as a dictionary or a path to a .json file.
 
 - **hf_weight** (`int`): How much to penalise high-frequency patterns in the input. If you are generating very blurry and indistinct prototypes, decrease this. If you are getting very noisy prototypes, increase it. This depends on your model architecture and is hard for us to predict, so you might want to experiment. It's a bit like focussing a microscope. Best practice is to start with zero, and gradually increase.
-  - *Default*: `0`
+
+  - _Default_: `0`
 
 - **input_dim** (`list`): The dimensions of the input that your model expects.
-  - *Default*: `[224, 224, 3]` if mode is "tf" else `[3, 224, 224]`
+
+  - _Default_: `[224, 224, 3]` if mode is "tf" else `[3, 224, 224]`
 
 - **isolation** (`bool`): Whether to isolate features for entangled classes. Set to False if you want prototypes only.
-  - *Default*: `True`
+
+  - _Default_: `True`
 
 - **find_lr_steps** (`int`): How many steps to tune the learning rate over at the start of the generation process. We do this automatically for you, but if you want to tune the learning rate manually, set this to zero and provide a learning rate with **lr**.
-  - *Default*: `500`
+
+  - _Default_: `500`
 
 - **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
-  - *Default*: `1500`
-
+  - _Default_: `1500`
 
 Here are all of the config options currently available:
 
@@ -268,74 +311,59 @@ config = {
 ```
 
 - **alpha_mask** (`bool`): If True, applies a mask during prototype generation which encourages the resulting prototypes to be minimal, centered and concentrated. Experimental.
-  - *Default*: `False`
-  
+  - _Default_: `False`
 - **alpha_only** (`bool`): If True, during the prototype generation process, only an alpha channel is optimised. This results in generation prototypical shapes and textures only, with no colour information.
-  - *Default*: `False`
-  
+  - _Default_: `False`
 - **baseline_init** (`int` or `str`): How to initialise the input. A sensible option is the mean of your expected input data, if you know it. Use 'r' to initialise with random noise for more varied results with different random seeds.
-  - *Default*: `0`
-  
+  - _Default_: `0`
 - **diversity_weight** (`int`): When generating multiple prototypes for the same class, we can apply a diversity objective to push for more varied inputs. The higher this number, the harder the optimisation process will push for different inputs. Experimental.
-  - *Default*: `0`
- 
+
+  - _Default_: `0`
+
 - **find_lr_steps** (`int`): How many steps to tune the learning rate over at the start of the generation process. We do this automatically for you, but if you want to tune the learning rate manually, set this to zero and provide a learning rate with **lr**.
-  - *Default*: `500`
-  
+  - _Default_: `500`
 - **hf_weight** (`int`): How much to penalise high-frequency patterns in the input. If you are generating very blurry and indistinct prototypes, decrease this. If you are getting very noisy prototypes, increase it. This depends on your model architecture and is hard for us to predict, so you might want to experiment. It's a bit like focussing binoculars. Best practice is to start with zero, and gradually increase.
-  - *Default*: `1`
-  
+  - _Default_: `1`
 - **input_dim** (`list`): The dimensions of the input that your model expects.
-  - *Default*: `[224, 224, 3]` if mode is "tf" else `[3, 224, 224]`
-  
+  - _Default_: `[224, 224, 3]` if mode is "tf" else `[3, 224, 224]`
 - **isolate_classes** (`list`): If you'd like to isolate features for specific classes, rather than the top _n_, specify their indices here for EACH target, e.g. [[2,7,8], [2,3]].
-  - *Default*: `None`
-  
+  - _Default_: `None`
 - **isolation** (`bool`): Whether to isolate features for entangled classes. Set to False if you want prototypes only.
-  - *Default*: `True`
-  
+  - _Default_: `True`
 - **isolation_hf_weight** (`int`): How much to penalise high-frequency patterns in the feature isolation mask. See hf_weight.
-  - *Default*: `1`
-  
+  - _Default_: `1`
 - **isolation_lr** (`float`): How much to update the isolation mask at each step during the feature isolation process.
-  - *Default*: `0.05`
-  
+  - _Default_: `0.05`
 - **log_freq** (`int`): Interval at which to log images.
-  - *Default*: `100`
-  
+  - _Default_: `100`
 - **lr** (`float`): How much to update the prototype at each step during the prototype generation process. We find this for you automatically between **max_lr** and **min_lr**, but if you would like to tune it manually, set **find_lr_steps** to zero and provide it here.
-  - *Default*: `0.05`
-  
+  - _Default_: `0.05`
 - **max_isolate_classes** (`int`): How many classes to isolate features for, if isolate_classes is not provided.
-  - *Default*: `min(3, len(class_list))`
+
+  - _Default_: `min(3, len(class_list))`
 
 - **max_lr** (`float`): Maximum learning rate for learning rate finder.
- - *Default*: `1.0`     
-  
-- **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
-  - *Default*: `1000`
- 
-- **min_lr** (`float`): Minimum learning rate for learning rate finder.
- - *Default*: `0.0001`   
-  
-- **seed** (`int`): Random seed for initialisation.
-  - *Default*: `0`
-  
-- **transform** (`str`): Random affine transformation to guard against adversarial noise. You can also experiment with the following options: ['s', 'm', 'l', 'xl']. You can also set this to `None` and provide your own transformation in `engine.generate(preprocessing=your transformation).
-  - *Default*: `xl`
-  
-- **use_alpha** (`bool`): If True, adds an alpha channel to the prototype. This results in the prototype generation process returning semi-transparent prototypes, which allow it to express ambivalence about the values of pixels that don't change the model prediction.
-  - *Default*: `False`
-  
-- **use_baseline** (`bool`): Whether to generate an equidistant baseline input prior to the prototype generation process. It takes a bit longer, but setting this to True will ensure that all prototypes generated for a model are not biased by input initialisation.
-  - *Default*: `False`
-  
-- **wandb_api_key** (`str`): Provide your weights and biases API key here to enable logging results directly to your WandB dashboard.
-  - *Default*: `None`
-  
-- **wandb_entity** (`str`): If logging to WandB, make sure to provide your WandB entity name here.
-  - *Default*: `None`
+- _Default_: `1.0`
 
+- **max_steps** (`int`): How many steps to run the prototype generation/feature isolation process for. If you get indistinct prototypes or isolations, try increasing this number.
+
+  - _Default_: `1000`
+
+- **min_lr** (`float`): Minimum learning rate for learning rate finder.
+- _Default_: `0.0001`
+
+- **seed** (`int`): Random seed for initialisation.
+  - _Default_: `0`
+- **transform** (`str`): Random affine transformation to guard against adversarial noise. You can also experiment with the following options: ['s', 'm', 'l', 'xl']. You can also set this to `None` and provide your own transformation in `engine.generate(preprocessing=your transformation).
+  - _Default_: `xl`
+- **use_alpha** (`bool`): If True, adds an alpha channel to the prototype. This results in the prototype generation process returning semi-transparent prototypes, which allow it to express ambivalence about the values of pixels that don't change the model prediction.
+  - _Default_: `False`
+- **use_baseline** (`bool`): Whether to generate an equidistant baseline input prior to the prototype generation process. It takes a bit longer, but setting this to True will ensure that all prototypes generated for a model are not biased by input initialisation.
+  - _Default_: `False`
+- **wandb_api_key** (`str`): Provide your weights and biases API key here to enable logging results directly to your WandB dashboard.
+  - _Default_: `None`
+- **wandb_entity** (`str`): If logging to WandB, make sure to provide your WandB entity name here.
+  - _Default_: `None`
 
 ## FAQ
 
@@ -353,9 +381,10 @@ During the prototype generation process we extract a lot of information from the
 
 ### What is feature isolation?
 
-Feature isolation does what it says on the tin - it isolates which features in the input the model is using to make its prediction. 
+Feature isolation does what it says on the tin - it isolates which features in the input the model is using to make its prediction.
 
-We can apply feature isolation in two ways: 
+We can apply feature isolation in two ways:
+
 - 1. On a prototype that we've generated, to isolate which features are shared between entangled classes, and so help explain how those classes are entangled; and
 - 2. On some input data, to explain individual predictions that your model makes, by isolating the features in the input that correspond to the predicted class (similar to saliency mapping).
 
