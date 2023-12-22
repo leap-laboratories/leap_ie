@@ -17,11 +17,12 @@ During installation `leap-ie` does not modify any dependencies related to PyTorc
 | ---------- | ------- |
 | torch | >=1.13.0 |
 | torchvision | >=0.14.0 |
+| timm | >=0.9.12 |
 
 **Tensorflow**
 | Library | Version |
 | ---------- | ------- |
-| tensorflow | >=2.12.0 |
+| tensorflow | >=2.4.0 |
 
 If you do not have the required libraries installed, you can quickly install them by specifying them as extras:
 
@@ -47,14 +48,14 @@ Sign in and generate your API key in the [leap app](https://app.leap-labs.com/) 
 from leap_ie.vision import engine
 from leap_ie.vision.models import get_model
 
-preprocessing_fn, model, class_list = get_model('torchvision.resnet18')
+preprocessing_fn, model, class_list = get_model('resnet18', source='torchvision')
 
 config = {"leap_api_key": "YOUR_API_KEY"}
 
 results_df, results_dict = engine.generate(project_name="leap!", model=model, class_list=class_list, config = config, target_classes=[1], preprocessing=preprocessing_fn)
 ```
 
-We provide easy access to all [image classification torchvision models](https://pytorch.org/vision/main/models.html#classification) via `leap_ie.models.get_model(torchvision.[name of model])`. We can also automatically pull image classification models from huggingface - just use the model id: `get_model('nateraw/vit-age-classifier')`
+We provide easy access to all [image classification torchvision models](https://pytorch.org/vision/main/models.html#classification) via `leap_ie.models.get_model("model_name", source="torchvision")`. We can also automatically pull image classification models from huggingface - just use the model id: `get_model('nateraw/vit-age-classifier', source='huggingface')`.
 
 ## Usage
 
@@ -130,7 +131,7 @@ from leap_ie.vision.models import get_model
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
 
 # Replace this model with your own, or explore any imagenet classifier from torchvision (https://pytorch.org/vision/stable/models.html).
-preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
+preprocessing_fn, model, class_list = get_model("resnet18", source="torchvision")
 
 # indexes of classes to generate prototypes for. In this case, ['tench', 'goldfish', 'great white shark'].
 target_classes = [0, 1, 2]
@@ -166,7 +167,7 @@ from PIL import Image
 config = {"leap_api_key": "YOUR_LEAP_API_KEY"}
 
 # Replace this model with your own, or explore any imagenet classifier from torchvision (https://pytorch.org/vision/stable/models.html).
-preprocessing_fn, model, class_list = get_model("torchvision.resnet18")
+preprocessing_fn, model, class_list = get_model("resnet18", source="torchvision")
 
 # load an image
 image_path = "tools.jpeg"
